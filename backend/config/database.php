@@ -12,6 +12,7 @@ $options = [
 
 try {
   $pdo = new PDO($dsn, $user, $pass, $options);
+  $pdo->exec("SET time_zone = '-03:00';"); // Zona horaria ajustada
 } catch (PDOException $e) {
   http_response_code(500);
   echo json_encode(['error' => 'Error de conexión: ' . $e->getMessage()]);

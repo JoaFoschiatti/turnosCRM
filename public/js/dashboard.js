@@ -1,6 +1,10 @@
 // public/js/dashboard.js
 async function loadDashboardModule() {
   const container = document.getElementById('viewContainer');
+  if (!container) {
+    console.error('Elemento viewContainer no encontrado');
+    return;
+  }
   container.innerHTML = `
     <h2 class="text-2xl font-bold text-gray-800 mb-6">Dashboard</h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
@@ -27,14 +31,24 @@ async function loadDashboardModule() {
     </div>
   `;
 
-  try {
-    const statsRes = await fetch('../backend/index.php?ruta=dashboard_stats');
-    if (!statsRes.ok) throw new Error('Error al obtener estadísticas');
-    const stats = await statsRes.json();
-    document.getElementById('todayAppointments').textContent = stats.todayAppointments;
-    document.getElementById('totalRevenue').textContent = `$ ${Number(stats.totalRevenue).toLocaleString('es-AR')}`;
-    document.getElementById('activeClients').textContent = stats.activeClients;
+  async function updateStats() {
+    try {
+      const statsRes = await fetch('../backend/index.php?ruta=dashboard_stats');
+      if (!statsRes.ok) throw new Error('Error al obtener estadísticas');
+      const stats = await statsRes.json();
+      document.getElementById('todayAppointments').textContent = stats.todayAppointments || 0;
+      document.getElementById('totalRevenue').textContent = `$ ${Number(stats.totalRevenue || 0).toLocaleString('es-AR')}`;
+      document.getElementById('activeClients').textContent = stats.activeClients || 0;
+    } catch (err) {
+      console.error('Error en updateStats:', err);
+      showToast(err.message, 'error');
+    }
+  }
 
+  // Cargar estadísticas iniciales
+  updateStats();
+
+  try {
     const appointmentsRes = await fetch('../backend/index.php?ruta=appointments&type=future');
     if (!appointmentsRes.ok) throw new Error('Error al obtener turnos');
     const appointments = await appointmentsRes.json();
@@ -42,11 +56,14 @@ async function loadDashboardModule() {
     if (!appointments.length) {
       listContainer.innerHTML = '<p class="text-gray-500 italic">No hay turnos próximos.</p>';
     } else {
-      // Agrupar turnos por día de la semana
       const groupedByDay = appointments.reduce((acc, turno) => {
+        if (!turno.fecha_hora) {
+          console.warn('Turno sin fecha_hora:', turno);
+          return acc;
+        }
         const date = new Date(turno.fecha_hora);
         if (isNaN(date.getTime())) {
-          console.warn("Fecha inválida en turno:", turno.fecha_hora);
+          console.error('Fecha inválida en turno:', turno.fecha_hora);
           return acc;
         }
         const dayName = date.toLocaleDateString('es-AR', { weekday: 'long' }).charAt(0).toUpperCase() + date.toLocaleDateString('es-AR', { weekday: 'long' }).slice(1);
@@ -147,6 +164,7 @@ async function loadDashboardModule() {
     html += `</tbody></table>`;
     pendingContainer.innerHTML = html;
   } catch (err) {
+    console.error('Error en loadDashboardModule:', err);
     showToast(err.message, 'error');
   }
 }

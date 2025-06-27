@@ -25,10 +25,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
       JOIN clientes c ON t.cliente_id = c.id
       JOIN servicios s ON t.servicio_id = s.id
       $whereClause
-      AND t.fecha_hora <= DATE_SUB(?, INTERVAL 1 HOUR)
+      AND t.fecha_hora <= DATE_SUB(NOW(), INTERVAL 1 HOUR)
       ORDER BY t.fecha_hora DESC
     ";
-    $params = ($role === 'admin') ? [$now] : [$userId, $now];
+    $params = ($role === 'admin') ? [] : [$userId];
   } else {
     $sql = "
       SELECT t.id, c.id AS cliente_id, c.nombre AS cliente, s.id AS servicio_id, s.nombre AS servicio,
@@ -37,15 +37,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
       JOIN clientes c ON t.cliente_id = c.id
       JOIN servicios s ON t.servicio_id = s.id
       $whereClause
-      AND t.fecha_hora > DATE_SUB(?, INTERVAL 1 HOUR)
+      AND t.fecha_hora > DATE_SUB(NOW(), INTERVAL 1 HOUR)
       ORDER BY t.fecha_hora ASC
     ";
-    $params = ($role === 'admin') ? [$now] : [$userId, $now];
+    $params = ($role === 'admin') ? [] : [$userId];
   }
   try {
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);
-    echo json_encode($stmt->fetchAll());
+    $results = $stmt->fetchAll();
+    error_log("Consulta ejecutada con éxito, resultados: " . print_r($results, true)); // Depuración correcta
+    echo json_encode($results);
   } catch (PDOException $e) {
     http_response_code(500);
     echo json_encode(['error' => 'Error en la base de datos: ' . $e->getMessage()]);

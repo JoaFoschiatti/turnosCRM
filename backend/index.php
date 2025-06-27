@@ -46,23 +46,23 @@ switch ($path) {
       error_log('Check fallido: no hay sesión');
     }
     break;
+  case 'dashboard_stats':
+    require_once 'controllers/dashboard_stats.php';
+    break;
+  case 'appointments':
+    require __DIR__ . '/controllers/appointments.php';
+    break;
   case 'services':
     require __DIR__ . '/controllers/services.php';
     break;
   case 'clients':
     require __DIR__ . '/controllers/clients.php';
     break;
-  case 'appointments':
-    require __DIR__ . '/controllers/appointments.php';
-    break;
   case 'users':
     require __DIR__ . '/controllers/users.php';
     break;
   case 'change_password':
     require __DIR__ . '/controllers/change_password.php';
-    break;
-  case 'dashboard_stats':
-    require __DIR__ . '/controllers/dashboard_stats.php';
     break;
   default:
     http_response_code(404);

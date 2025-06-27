@@ -56,9 +56,20 @@ async function fetchAppointments(type) {
     throw new Error(`Error al obtener turnos (status: ${res.status}) - ${text.substring(0, 100)}...`);
   }
   const data = await res.json();
-  console.log("Datos crudos de fetchAppointments:", data); // Depuración de datos crudos
-  const filteredData = data.filter(turno => turno.status === 'habilitado');
-  console.log("Datos filtrados por 'habilitado':", filteredData); // Depuración después del filtro
+  console.log(`Datos crudos de ${type} appointments:`, data);
+  const now = new Date().toISOString().slice(0, 19).replace('T', ' ');
+  console.log(`Hora actual del cliente: ${now} (Zona: ${Intl.DateTimeFormat().resolvedOptions().timeZone})`);
+  const filteredData = data.filter(turno => {
+    const turnoDate = new Date(turno.fecha_hora).toISOString().slice(0, 19).replace('T', ' ');
+    console.log(`Turno ${turno.id} - Fecha: ${turnoDate}, Estado: ${turno.status}, Comparación: ${turnoDate} ${type === 'future' ? '>' : '<='} ${now}`);
+    if (type === 'future') {
+      return turno.status === 'habilitado' && turnoDate > now;
+    } else if (type === 'expired') {
+      return turno.status === 'habilitado' && turnoDate <= now;
+    }
+    return false;
+  });
+  console.log(`Datos filtrados para ${type}:`, filteredData);
   return filteredData;
 }
 
@@ -71,106 +82,11 @@ async function renderAppointmentsList(type) {
   try {
     currentTab = type;
     const turnos = await fetchAppointments(type);
-    console.log("Turnos recibidos para renderizar:", turnos);
+    console.log(`Turnos recibidos para ${type}:`, turnos);
     if (!turnos.length) {
       listContainer.innerHTML = `<p class="text-gray-500 italic">No hay turnos ${type === "future" ? "próximos" : "vencidos"}.</p>`;
       return;
     }
-    // Agrupar turnos por día de la semana
-    const groupedByDay = turnos.reduce((acc, turno) => {
-      if (!turno.fecha_hora) {
-        console.warn("Turno sin fecha_hora:", turno);
-        return acc;
-      }
-      const date = new Date(turno.fecha_hora);
-      if (isNaN(date.getTime())) {
-        console.error("Fecha inválida en turno:", turno.fecha_hora);
-        return acc;
-      }
-      const dayName = date.toLocaleDateString('es-AR', { weekday: 'long' }).charAt(0).toUpperCase() + date.toLocaleDateString('es-AR', { weekday: 'long' }).slice(1);
-      if (!acc[dayName]) acc[dayName] = [];
-      acc[dayName].push(turno);
-      return acc;
-    }, {});
-    console.log("Agrupación por día:", groupedByDay);
-
-    let html = `
-      <div class="overflow-x-auto rounded-lg shadow-md">
-        <table class="min-w-full bg-white border border-gray-200">
-          <thead class="bg-gray-50">
-            <tr>
-              <th class="py-3 px-4 text-sm font-semibold text-gray-700">Día</th>
-              <th class="py-3 px-4 text-sm font-semibold text-gray-700">Cliente</th>
-              <th class="py-3 px-4 text-sm font-semibold text-gray-700">Servicio</th>
-              <th class="py-3 px-4 text-sm font-semibold text-gray-700 text-right">Costo</th>
-              <th class="py-3 px-4 text-sm font-semibold text-gray-700">Fecha y Hora</th>
-              <th class="py-3 px-4 text-sm font-semibold text-gray-700 text-center">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-    `;
-    const daysOrder = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
-    daysOrder.forEach(day => {
-      if (groupedByDay[day] && groupedByDay[day].length > 0) {
-        groupedByDay[day].forEach(turno => {
-          const date = new Date(turno.fecha_hora);
-          html += `
-            <tr class="border-t hover:bg-gray-50 transition">
-              <td class="py-3 px-4">${day}</td>
-              <td class="py-3 px-4">${turno.cliente || 'Sin cliente'}</td>
-              <td class="py-3 px-4">${turno.servicio || 'Sin servicio'}</td>
-              <td class="py-3 px-4 text-right font-mono">$ ${Number(turno.costo || 0).toLocaleString('es-AR')}</td>
-              <td class="py-3 px-4">
-                ${date.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' })} 
-                ${date.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })}
-              </td>
-              <td class="py-3 px-4 text-center">
-                <button data-id="${turno.id}" class="editTurno btn-custom-primary text-sm px-2 py-1">Editar</button>
-                <button data-id="${turno.id}" class="deleteTurno ml-2 btn-custom-danger text-sm px-2 py-1">Eliminar</button>
-              </td>
-            </tr>
-          `;
-        });
-      }
-    });
-    html += `</tbody></table></div>`;
-    listContainer.innerHTML = html;
-
-    document.querySelectorAll(".editTurno").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const turno = turnos.find(t => t.id == btn.dataset.id);
-        showTurnoForm(turno);
-      });
-    });
-
-    document.querySelectorAll(".deleteTurno").forEach(btn => {
-      btn.addEventListener("click", async () => {
-        if (!confirm("¿Eliminar este turno?")) return;
-        await window.deleteTurno(btn.dataset.id);
-        renderAppointmentsList(currentTab);
-      });
-    });
-  } catch (err) {
-    console.error("Error en renderAppointmentsList:", err);
-    showToast(err.message, "error");
-  }
-}
-
-async function renderAppointmentsList(type) {
-  const listContainer = document.getElementById("turnosList");
-  if (!listContainer) {
-    console.error("Elemento turnosList no encontrado");
-    return;
-  }
-  try {
-    currentTab = type;
-    const turnos = await fetchAppointments(type);
-    console.log("Turnos recibidos para renderizar:", turnos);
-    if (!turnos.length) {
-      listContainer.innerHTML = `<p class="text-gray-500 italic">No hay turnos ${type === "future" ? "próximos" : "vencidos"}.</p>`;
-      return;
-    }
-    // Agrupar turnos por día de la semana
     const groupedByDay = turnos.reduce((acc, turno) => {
       if (!turno.fecha_hora) {
         console.warn("Turno sin fecha_hora:", turno);
