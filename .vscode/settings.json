@@ -1,0 +1,23 @@
+{
+    "explorer.confirmDelete": false,
+    "window.confirmSaveUntitledWorkspace": false,
+    "explorer.confirmDragAndDrop": false,
+    "liveServer.settings.NoBrowser": true,
+    "liveServer.settings.donotShowInfoMsg": true,
+    "liveServer.settings.donotVerifyTags": true,
+    "[php]": {
+        "editor.defaultFormatter": "bmewburn.vscode-intelephense-client"
+    },
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "intelephense.files.associations": [
+        "*.php",
+        "*.phtml"
+    ],
+    "files.associations": {
+        "*.js": "javascript"
+    },
+    "typescript.validate.enable": false,
+    "javascript.validate.enable": true
+}

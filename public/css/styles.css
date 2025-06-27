@@ -1,0 +1,97 @@
+/* public/css/styles.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .btn-custom-primary {
+    @apply bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg shadow-lg border border-gray-300 transition-all hover:shadow-xl;
+  }
+  .btn-custom-secondary {
+    @apply bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-4 rounded-lg shadow-lg border border-gray-300 transition-all hover:shadow-xl;
+  }
+  .btn-custom-danger {
+    @apply bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-lg shadow-lg border border-gray-300 transition-all hover:shadow-xl;
+  }
+  .btn-custom-lime {
+    @apply bg-lime-400 hover:bg-lime-500 text-white font-medium py-2 px-4 rounded-lg shadow-lg border border-gray-300 transition-all hover:shadow-xl;
+  }
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  @apply appearance-none;
+  margin: 0;
+}
+input[type="number"] {
+  @apply appearance-none;
+}
+
+:root {
+  --primary-bg: #f8fafc;
+  --primary-text: #1f2937;
+  --accent-color: #2563eb;
+  --hover-color: #1d4ed8;
+  --border-color: #e2e8f0;
+  --success-color: #10b981;
+  --error-color: #ef4444;
+}
+
+body {
+  @apply bg-gradient-to-br from-blue-50 to-gray-100 min-h-screen font-sans text-gray-800;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  @apply bg-white border-b border-gray-200 shadow-sm sticky top-0 z-30;
+}
+
+.container {
+  @apply max-w-5xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+table {
+  @apply w-full border-collapse bg-white rounded-lg shadow-sm;
+}
+
+th, td {
+  @apply py-3 px-4;
+}
+
+th {
+  @apply bg-gray-50 text-sm font-semibold text-gray-700;
+}
+
+tr {
+  @apply border-t border-gray-200 hover:bg-gray-50 transition;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.modal {
+  @apply fixed inset-0 bg-black/60 flex items-center justify-center z-50;
+}
+
+.modal-content {
+  @apply bg-white p-6 rounded-xl shadow-2xl max-w-md w-full;
+}
+
+@media (max-width: 640px) {
+  .container {
+    @apply px-3;
+  }
+  table {
+    @apply text-sm;
+  }
+  .modal-content {
+    @apply w-11/12;
+  }
+}

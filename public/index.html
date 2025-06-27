@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TurnosCRM - Login</title>
+    <link rel="stylesheet" href="css/tailwind.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#2563eb" />
+    <link
+      rel="apple-touch-icon"
+      href="/turneroCRMNew/public/assets/icons/icon-192.png"
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.js"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/es.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        if ("serviceWorker" in navigator) {
+          navigator.serviceWorker
+            .register("/turneroCRMNew/public/sw.js")
+            .then(() => console.log("Service Worker registrado"))
+            .catch((err) =>
+              console.error("Error al registrar Service Worker:", err)
+            );
+        }
+        if (
+          typeof flatpickr !== "undefined" &&
+          flatpickr.l10ns &&
+          flatpickr.l10ns.es
+        ) {
+          flatpickr.localize(flatpickr.l10ns.es);
+        } else {
+          console.warn('Locale "es" no encontrado para flatpickr');
+        }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker
+          .register("/turneroCRMNew/public/sw.js")
+          .then(() => console.log("Service Worker registrado"))
+          .catch((err) =>
+            console.error("Error al registrar Service Worker:", err)
+          );
+      }
+      flatpickr.localize(flatpickr.l10ns.es);
+    </script>
+  </head>
+  <body
+    class="bg-gradient-to-br from-blue-50 to-gray-100 min-h-screen flex items-center justify-center"
+  >
+    <form
+      id="loginForm"
+      class="bg-white p-6 rounded-xl shadow-2xl w-full max-w-sm space-y-4 animate-fade-in"
+    >
+      <h2 class="text-2xl font-bold text-gray-800">Iniciar sesión</h2>
+      <input
+        type="text"
+        id="username"
+        placeholder="Usuario"
+        class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+        required
+      />
+      <input
+        type="password"
+        id="password"
+        placeholder="Contraseña"
+        class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+        required
+      />
+      <label class="inline-flex items-center space-x-2">
+        <input
+          type="checkbox"
+          id="remember"
+          class="form-checkbox h-4 w-4 text-blue-600"
+        />
+        <span class="text-gray-600 text-sm">Recuérdame</span>
+      </label>
+      <button type="submit" class="btn-primary w-full">Entrar</button>
+    </form>
+    <script src="js/toast.js"></script>
+    <script src="js/auth.js"></script>
+  </body>
+</html>

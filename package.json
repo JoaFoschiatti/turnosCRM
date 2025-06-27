@@ -1,0 +1,13 @@
+{
+  "name": "turnerocrmnew",
+  "version": "1.0.0",
+  "description": "turneroCRMNew/\r ├── .vscode/                   \r │   └── settings.json          # Opcionales ajustes de VS Code  \r ├── backend/                   \r │   ├── config/\r │   │   └── database.php       \r │   ├── models/                \r │   ├── controllers/           \r │   │   ├── auth.php\r │   │   ├── services.php\r │   │   ├── clients.php\r │   │   └── appointments.php\r │   └── index.php              \r ├── database/                  \r │   └── schema.sql             \r ├── public/                    \r │   ├── index.html             # Incluye <script src=\"https://cdn.tailwindcss.com\"></script>\r │   ├── manifest.json          \r │   ├── service-worker.js      \r │   ├── css/\r │   │   └── styles.css         # CSS adicional (reset, overrides, utilidades propias)\r │   ├── js/\r │   │   ├── app.js             \r │   │   ├── auth.js            \r │   │   ├── services.js        \r │   │   ├── clients.js         \r │   │   ├── appointments.js    \r │   │   └── toast.js           \r │   └── assets/\r │       └── images/            \r ├── logs/                      # (opcional) registros de errores\r └── README.md",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "tailwindcss": "^3.4.17"
+  }
+}

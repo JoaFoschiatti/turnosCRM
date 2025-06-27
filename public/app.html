@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TurnosCRM</title>
+  <link rel="stylesheet" href="css/tailwind.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2563eb">
+  <link rel="apple-touch-icon" href="/turneroCRMNew/public/assets/icons/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.js"></script>
+  <script src="https://npmcdn.com/flatpickr/dist/l10n/es.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/turneroCRMNew/public/sw.js')
+          .then(() => console.log('Service Worker registrado'))
+          .catch(err => console.error('Error al registrar Service Worker:', err));
+      }
+      if (typeof flatpickr !== 'undefined' && flatpickr.l10ns && flatpickr.l10ns.es) {
+        flatpickr.localize(flatpickr.l10ns.es);
+      } else {
+        console.warn('Locale "es" no encontrado para flatpickr');
+      }
+    });
+  </script>
+</head>
+<body class="min-h-screen flex flex-col">
+  <header class="header">
+    <div class="container flex flex-col sm:flex-row justify-between items-center py-4">
+      <h1 class="text-2xl font-bold text-gray-800">Turnero <span class="text-blue-600">CRM</span></h1>
+      <div class="flex gap-2 mt-2 sm:mt-0">
+        <button id="btnLogout" class="btn-custom-danger text-sm px-3 py-1">Cerrar sesión</button>
+        <button id="btnChangePwd" class="btn-custom-lime text-sm px-3 py-1">Cambiar contraseña</button>
+      </div>
+      <nav class="flex flex-wrap gap-2 justify-center mt-4 sm:mt-0">
+        <button id="btnDashboard" class="btn-custom-primary">Dashboard</button>
+        <button id="btnUsers" class="btn-custom-primary hidden">Usuarios</button>
+        <button id="btnServices" class="btn-custom-primary">Servicios</button>
+        <button id="btnClients" class="btn-custom-primary">Clientes</button>
+        <button id="btnTurnos" class="btn-custom-primary">Turnos</button>
+      </nav>
+    </div>
+  </header>
+  <main class="container py-6">
+    <div id="viewContainer" class="animate-fade-in"></div>
+  </main>
+  <script src="js/toast.js"></script>
+  <script src="js/utils/crud.js"></script>
+  <script src="js/users.js"></script>
+  <script src="js/services.js"></script>
+  <script src="js/clients.js"></script>
+  <script src="js/appointments.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
