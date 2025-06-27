@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 turneroCRMNew/
 ├── .vscode/                   
 │   └── settings.json          # Opcionales ajustes de VS Code  
@@ -30,3 +31,7 @@ turneroCRMNew/
 │       └── images/            
 ├── logs/                      # (opcional) registros de errores
 └── README.md                  
+=======
+# turnosCRM
+An online/offline-PWA that I have made for a final proyect at University.
+>>>>>>> 7270902484862a581b672eb41630c2ae4af798f4
