@@ -1,0 +1,15 @@
+# Ignorar archivos de configuración local
+.vscode/
+logs/
+*.log
+
+# Ignorar archivos generados
+node_modules/
+public/css/tailwind.css
+
+# Ignorar bases de datos locales
+database/*.sql
+
+# Ignorar archivos de sistema
+.DS_Store
+*.env
